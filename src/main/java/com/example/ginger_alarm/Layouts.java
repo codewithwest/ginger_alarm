@@ -22,7 +22,7 @@ import java.util.List;
 public class Layouts {
     VBox alarmsLayout, newAlarmLayout;
     public  VBox alarmsLayout(){
-         alarmsLayout = new VBox();
+        alarmsLayout = new VBox();
         alarmsLayout.setPadding(new Insets(.5, .5, .5, .2));
 
         Label timeLabel = new Label();
@@ -56,13 +56,11 @@ public class Layouts {
         //Alarm Message
         VBox alarmMessage = new VBox();
 
-
         TextField alarmMessageInput = new TextField();
         alarmMessageInput.setPrefHeight(60);
         alarmMessage.getChildren().addAll(alarmMessageInput);
         alarmMessageInput.getStyleClass().add("messageInputs");
         alarmMessageInput.getStyleClass().add("labelText");
-
 
         GridPane newAlarmSetGridContainer = new GridPane();
         newAlarmSetGridContainer.setVgap(8);

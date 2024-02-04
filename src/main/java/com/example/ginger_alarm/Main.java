@@ -12,10 +12,8 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
-import static com.example.ginger_alarm.BackgroundTask.getBackgroundService;
-
 public class Main extends Application {
-    Stage mainWindow, secondaryWindow;
+    Stage mainWindow, alarmPopUpWindowStage;
     Button alarmsButton,newAlarmButton, exitAppButton;
     VBox  newAlarmLayout, alarmsLayout;
 
@@ -23,6 +21,9 @@ public class Main extends Application {
     public void start(Stage stage) throws Exception {
         BackgroundHandler backgroundHandler= new BackgroundHandler();
         mainWindow = new Stage(StageStyle.TRANSPARENT);
+        alarmPopUpWindowStage = new Stage(StageStyle.TRANSPARENT);
+        alarmPopUpWindowStage.setTitle("Alarm Alert");
+
         backgroundHandler.handleBackgroundScene(mainWindow);
 
         mainWindow.setTitle("Ginger Alarms");
@@ -64,7 +65,7 @@ public class Main extends Application {
         Scene scene = new Scene(mainHorizontalLayout);
         scene.setFill(Color.TRANSPARENT);
         //  Getting the stylesheet file
-        scene.getStylesheets().add("file:/samba/public/documents/github/java/ginger_alarm/src/main/java/com/example/ginger_alarm/ginger.css");
+        scene.getStylesheets().add("file:/samba/public/documents/github/ginger_alarm/src/main/resources/style/main.css");
         mainWindow.setScene(scene);
         mainWindow.show();
         // Handle navigation clicks
@@ -87,11 +88,10 @@ public class Main extends Application {
 
         });
 
-
-        ScheduledService<Void> backgroundService = getBackgroundService();
+        BackgroundTask BackgroundTaskHandler = new BackgroundTask();
+        alarmPopUpWindowStage.setScene(new AlarmPopUp(alarmPopUpWindowStage).AlarmPopUpScene());
+        ScheduledService<Void> backgroundService = BackgroundTaskHandler.getBackgroundService(alarmPopUpWindowStage);
         backgroundService.start();
-
-
 
     }
 

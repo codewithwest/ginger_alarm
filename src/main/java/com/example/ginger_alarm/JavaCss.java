@@ -76,7 +76,7 @@ public class JavaCss  extends Application {
         grid.getChildren().addAll(nameLabel, nameInput, passLabel, passInput, loginButton, newDate, checkBox1, dropdown);
 
         Scene scene = new Scene(grid, 500, 200);
-        scene.getStylesheets().add(String.valueOf(getClass().getResource("/samba/public/documents/github/java/ginger_alarm/src/main/java/com/example/ginger_alarm/ginger.css")));
+        scene.getStylesheets().add(String.valueOf(getClass().getResource("/samba/public/documents/github/java/ginger_alarm/src/main/java/com/example/ginger_alarm/main.css")));
         window.setScene(scene);
 
         window.show();

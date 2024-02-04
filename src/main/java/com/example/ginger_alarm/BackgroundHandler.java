@@ -23,7 +23,7 @@ public class BackgroundHandler {
         }
         BufferedImage image;
         try {
-            image = ImageIO.read(Objects.requireNonNull(getClass().getResource("/assets/dog-icon.png")));
+            image = ImageIO.read(Objects.requireNonNull(getClass().getResource("/assets/images/dog-icon.png")));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
