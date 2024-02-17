@@ -67,7 +67,6 @@ public class Main extends Application {
         //  Getting the stylesheet file
         scene.getStylesheets().add("file:/samba/public/documents/github/ginger_alarm/src/main/resources/style/main.css");
         mainWindow.setScene(scene);
-        mainWindow.show();
         // Handle navigation clicks
         alarmsButton.setOnAction(e->{
             contentLayout.getChildren().removeFirst();
@@ -79,17 +78,17 @@ public class Main extends Application {
         });
         exitAppButton.setOnAction(e->{
             // mainWindow.close();
-
-//            mainWindow.setOnCloseRequest(event -> {
-                // Optionally prompt the user for confirmation or perform cleanup tasks
-                // Hide the primary stage instead of closing it
-                mainWindow.hide();
-                e.consume();
+            //  mainWindow.setOnCloseRequest(event -> {
+            // Optionally prompt the user for confirmation or perform cleanup tasks
+            // Hide the primary stage instead of closing it
+            mainWindow.hide();
+            e.consume();
 
         });
 
         BackgroundTask BackgroundTaskHandler = new BackgroundTask();
-        alarmPopUpWindowStage.setScene(new AlarmPopUp(alarmPopUpWindowStage).AlarmPopUpScene());
+
+
         ScheduledService<Void> backgroundService = BackgroundTaskHandler.getBackgroundService(alarmPopUpWindowStage);
         backgroundService.start();
 
@@ -100,6 +99,4 @@ public class Main extends Application {
     public static void main(String[] args) {
         launch(args);
     }
-
-
 }
