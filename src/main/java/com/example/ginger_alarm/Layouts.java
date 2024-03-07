@@ -1,7 +1,6 @@
 package com.example.ginger_alarm;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
+import com.example.day_time_desipher.DayToDate;
 import javafx.animation.AnimationTimer;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -17,6 +16,7 @@ import javafx.scene.layout.VBox;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 public class Layouts {
@@ -181,14 +181,21 @@ public class Layouts {
             if(alarmRepeatCheckBoxThur.isSelected())days.add("Thursday");
             if(alarmRepeatCheckBoxFri.isSelected())days.add("Friday");
             if(alarmRepeatCheckBoxSat.isSelected())days.add("Saturday");
-            if(alarmRepeatCheckBoxSun.isSelected())days.add("Sunday");
+            if (alarmRepeatCheckBoxSun.isSelected())days.add("Sunday");
 
             String alarmMes = "message: " + alarmMessageInput.getText()+",";
             String chosenTime = "time: "+ hours + ":" + minutes+",";
             String repeatedTime = "repeated: " + alarmRepeatCheckBox.isSelected()+",";
-            String numOfDays = "days: "+ Lists.newArrayList(Sets.newHashSet(days));
-
+            String numOfDays = "days: " + new ArrayList<>(new HashSet<>(days));
             String compiledAlarmData = "{" + alarmMes + chosenTime + repeatedTime + numOfDays + "}";
+            DBManager DbManager = new DBManager();
+            List<String> uniqueDays = new ArrayList<>(new HashSet<>(days));
+            List<String> ResolvedDays;
+            ResolvedDays = new DayToDate().GetAlarmDates(uniqueDays, hours, minutes);
+            DbManager.AlarmUpdate("new",alarmMessageInput.getText(),
+                    hours + ":" + minutes,
+                    alarmRepeatCheckBox.isSelected(),
+                    ResolvedDays);
 
             // Write to file
             System.out.println(compiledAlarmData);
@@ -205,6 +212,8 @@ public class Layouts {
             alarmRepeatCheckBoxFri.setSelected(false);
             alarmRepeatCheckBoxSat.setSelected(false);
             alarmRepeatCheckBoxSun.setSelected(false);
+            days.clear();
+
         });
 
         return newAlarmLayout;

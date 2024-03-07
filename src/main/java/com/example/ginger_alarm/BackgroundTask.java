@@ -1,12 +1,17 @@
 package com.example.ginger_alarm;
-import javafx.application.Platform;
+import com.example.day_time_desipher.DayToDate;
 import javafx.concurrent.ScheduledService;
 import javafx.concurrent.Task;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+
 public class BackgroundTask {
+    DBManager DbManager = new DBManager();
 
     @NotNull
     protected ScheduledService<Void> getBackgroundService(Stage secondaryStage) {
@@ -19,6 +24,9 @@ public class BackgroundTask {
                     protected Void call() throws Exception {
                         // Perform your background task logic here
 
+
+                        /*
+
                         if (!secondaryStage.isShowing()) {
                             Platform.runLater(()->{
                                 try {
@@ -30,12 +38,15 @@ public class BackgroundTask {
 
                             Platform.runLater(secondaryStage::show);
                         }
-                        else {
-                            System.out.println("Stop");
-                        }
-                        FileDirManager.createFileDir("logs");
+                         */
+                        List<String> days = new ArrayList<>();
+
+//                        DbManager.AlarmUpdate("get", "west", "12:23",  true, days);
+//                        FileDirManager.createFileDir("logs");
                         System.out.println("Background task running... at Time:" + FileDirManager.currentDateTime());
 //                        Process process = Runtime.getRuntime().exec("curl -o https://github.com/codewithwest/ProjectGinger/blob/main/Power_down.py");
+//                        new DayToDate().GetNewAlarmDay("Friday", "19", "33");
+
                         return null;
                     }
                 };

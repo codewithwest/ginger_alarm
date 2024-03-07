@@ -1,4 +1,5 @@
 com/example/ginger_alarm/BackgroundHandler.class
+com/example/ginger_alarm/DBManager.class
 com/example/ginger_alarm/Main.class
 com/example/ginger_alarm/JavaCss.class
 com/example/ginger_alarm/DropDownPick.class
@@ -14,7 +15,6 @@ com/example/ginger_alarm/BackgroundHandler$1.class
 com/example/ginger_alarm/FileDirManager.class
 com/example/ginger_alarm/ConfirmBox.class
 com/example/ginger_alarm/BackgroundHandler$1$1.class
-com/example/ginger_alarm/JythonHelloWorld.class
 com/example/ginger_alarm/AlertBox.class
 com/example/ginger_alarm/BackgroundTask$1$1.class
 com/example/ginger_alarm/TimeController.class
@@ -25,4 +25,3 @@ com/example/ginger_alarm/ClosingProperly.class
 com/example/ginger_alarm/EmbeddingLayouts.class
 com/example/ginger_alarm/BackgroundTask.class
 com/example/ginger_alarm/GridPaneEx.class
-com/example/ginger_alarm/AlarmDispatchHandler.class

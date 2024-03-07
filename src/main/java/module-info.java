@@ -13,8 +13,6 @@ module com.example.ginger_alarm {
     requires javafx.media;
     requires java.desktop;
     requires annotations;
-    requires guava;
-    requires jython.slim;
     requires org.mongodb.driver.sync.client;
     requires org.mongodb.bson;
     requires org.mongodb.driver.core;
