@@ -18,6 +18,10 @@ module com.example.ginger_alarm {
     requires org.mongodb.driver.core;
 
 
-    opens com.example.ginger_alarm to javafx.fxml;
-    exports com.example.ginger_alarm;
+    opens com.ginger_alarm.frontend to javafx.fxml;
+    exports com.ginger_alarm.frontend;
+    exports com.ginger_alarm.frontend.unused;
+    opens com.ginger_alarm.frontend.unused to javafx.fxml;
+    exports com.ginger_alarm.frontend.components;
+    opens com.ginger_alarm.frontend.components to javafx.fxml;
 }

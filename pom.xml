@@ -102,43 +102,26 @@
         </exclusion>
       </exclusions>
     </dependency>
-<dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter-api</artifactId>
-      <version>${junit.version}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter-engine</artifactId>
-      <version>${junit.version}</version>
-      <scope>test</scope>
-    </dependency>
       <dependency>
           <groupId>com.google.guava</groupId>
           <artifactId>guava</artifactId>
           <version>32.0.1-jre</version>
       </dependency>
-
-      <!--    Mongo -->
-
-<!--      <dependency>-->
-<!--          <groupId>org.python</groupId>-->
-<!--          <artifactId>jython-slim</artifactId>-->
-<!--          <version>2.7.3</version>-->
-<!--      </dependency>-->
-
       <dependency>
           <groupId>org.mongodb</groupId>
           <artifactId>mongodb-driver-sync</artifactId>
           <version>4.11.1</version>
       </dependency>
-
-
       <dependency>
           <groupId>com.vladsch.flexmark</groupId>
           <artifactId>flexmark</artifactId>
           <version>0.42.14</version>
+      </dependency>
+      <dependency>
+          <groupId>junit</groupId>
+          <artifactId>junit</artifactId>
+          <version>4.4</version>
+          <scope>test</scope>
       </dependency>
   </dependencies>
   <build>
@@ -161,7 +144,7 @@
             <!-- Default configuration for running with: mvn clean javafx:run -->
             <id>default-cli</id>
             <configuration>
-              <mainClass>com.example.ginger_alarm/com.example.ginger_alarm.Main</mainClass>
+              <mainClass>com.ginger_alarm.ginger_alarm/com.ginger_alarm.frontend.Main</mainClass>
               <launcher>app</launcher>
               <jlinkZipName>app</jlinkZipName>
               <jlinkImageName>app</jlinkImageName>
