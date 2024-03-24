@@ -1,6 +1,6 @@
 package com.ginger_alarm.frontend;
 
-import com.ginger_alarm.backend.FileDirManager;
+import com.ginger_alarm.backend.BackgroundTaskHandler;
 import com.ginger_alarm.frontend.components.BackgroundHandler;
 import com.ginger_alarm.frontend.components.Layouts;
 import javafx.application.Application;
@@ -14,11 +14,12 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.util.Duration;
 
 public class Main extends Application {
     Stage mainWindow, alarmPopUpWindowStage;
     Button alarmsButton,newAlarmButton, exitAppButton;
-    VBox  newAlarmLayout, alarmsLayout;
+    VBox  newAlarmLayout, alarmsLayout, settingsLayout;
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -58,6 +59,7 @@ public class Main extends Application {
         Layouts layouts = new Layouts();
         alarmsLayout = layouts.alarmsLayout();
         newAlarmLayout = layouts.newAlarmLayout();
+        settingsLayout = layouts.settingsLayout();
         // Alarms Layout
         // Append Layout
         contentLayout.getChildren().add(alarmsLayout);
@@ -88,11 +90,13 @@ public class Main extends Application {
             e.consume();
 
         });
+        mainWindow.setX(980);
+        mainWindow.show();
+        BackgroundTaskHandler BackgroundTaskHandler = new BackgroundTaskHandler();
 
-        FileDirManager.BackgroundTask BackgroundTaskHandler = new FileDirManager.BackgroundTask();
-
-
-        ScheduledService<Void> backgroundService = BackgroundTaskHandler.getBackgroundService(alarmPopUpWindowStage);
+        ScheduledService<Void> backgroundService;
+        backgroundService = BackgroundTaskHandler.getBackgroundService(alarmPopUpWindowStage);
+        backgroundService.setPeriod(Duration.minutes(1));
         backgroundService.start();
 
     }

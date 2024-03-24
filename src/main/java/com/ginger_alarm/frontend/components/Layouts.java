@@ -22,7 +22,7 @@ import java.util.HashSet;
 import java.util.List;
 
 public class Layouts {
-    VBox alarmsLayout, newAlarmLayout;
+    VBox alarmsLayout, newAlarmLayout, settingsLayout;
     public  VBox alarmsLayout(){
         alarmsLayout = new VBox();
         alarmsLayout.setPadding(new Insets(.5, .5, .5, .2));
@@ -168,11 +168,11 @@ public class Layouts {
         addNewAlarmButton.setOnAction(e->{
             String hours = alarmHoursInput.getText();
             String minutes = alarmMinutesInput.getText();
-            try{
+            try {
                 if (Integer.parseInt(hours) > 23 || Integer.parseInt(hours) < 0) return;
                 if (Integer.parseInt(minutes) > 59 || Integer.parseInt(minutes) < 0) return;
                 if (alarmMessageInput.getText().length() < 3) return;
-            }catch (Exception err){
+            } catch (Exception err){
                 e.consume();
                 return;
             }
@@ -201,7 +201,8 @@ public class Layouts {
 
             // Write to file
             System.out.println(ResolvedDays);
-            FileDirManager.writeToAlarmsFile(compiledAlarmData);
+            FileDirManager fileManager = new FileDirManager();
+            fileManager.writeToAlarmsFile(compiledAlarmData);
             // Reset Alarm Setter
             alarmHoursInput.clear();
             alarmMinutesInput.clear();
@@ -215,9 +216,32 @@ public class Layouts {
             alarmRepeatCheckBoxSat.setSelected(false);
             alarmRepeatCheckBoxSun.setSelected(false);
             days.clear();
-
         });
 
         return newAlarmLayout;
     }
+
+    public  VBox settingsLayout(){
+        alarmsLayout = new VBox();
+        alarmsLayout.setPadding(new Insets(.5, .5, .5, .2));
+
+        Label timeLabel = new Label();
+        timeLabel.setId("timeLabel"); // For styling purposes
+        AnimationTimer timer = new AnimationTimer() {
+            @Override
+            public void handle(long now) {
+                LocalDateTime currentTime = LocalDateTime.now();
+                String formattedTime = currentTime.format(DateTimeFormatter.ofPattern("HH:mm:ss"));
+                timeLabel.setText(formattedTime);
+            }
+        };
+        timer.start();
+        alarmsLayout.getStyleClass().add("timeCounter");
+
+        alarmsLayout.getChildren().addAll(timeLabel);
+        alarmsLayout.setAlignment(Pos.CENTER);
+
+        return alarmsLayout;
+    }
+
 }

@@ -1,11 +1,5 @@
 package com.ginger_alarm.backend;
 
-import javafx.concurrent.ScheduledService;
-import javafx.concurrent.Task;
-import javafx.stage.Stage;
-import javafx.util.Duration;
-import org.jetbrains.annotations.NotNull;
-
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -15,19 +9,22 @@ import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
-public    class FileDirManager  {
-     static String username = System.getProperty("user.name");
-     static String appFolderPath ="/home/"+username+"/ginger/ginger_alarm/";
+public  class FileDirManager  {
+      String username = System.getProperty("user.name");
+      String appFolderPath ="/home/"+username+"/.ginger/ginger_alarm/";
+    DateResolver dateResolver = new DateResolver();
+    DayToDate dayToTime = new DayToDate();
 
-    public static void createFileDir(String dir) {
+    public  void createFileDir(String dir) {
         try {
             if (!Files.isDirectory(Path.of(appFolderPath + dir))) {
                 Files.createDirectories(Paths.get(appFolderPath + dir));
             }
         }catch (IOException e){
-             System.out.println(e);
+             writeToLogFileError(e.toString());
         }
     }
 
@@ -37,7 +34,7 @@ public    class FileDirManager  {
         return new ArrayList<>(List.of(dtf.format(curDateAndTime)));
         }
 
-    public static boolean fileExists(String filePath) throws IOException {
+    public  boolean fileExists(String filePath) throws IOException {
         boolean result = true;
         File file = new File(filePath);
         if (!file.exists()) {
@@ -46,7 +43,7 @@ public    class FileDirManager  {
         return result;
     }
 
-    public static void writeToFile(String filePath, String logHead, String message) throws IOException {
+    public  void writeToFile(String filePath, String logHead, String message) throws IOException {
         if (fileExists(filePath)) {
             FileWriter myWriter = new FileWriter(filePath, true);
             myWriter.write(logHead + message + "\n");
@@ -63,9 +60,9 @@ public    class FileDirManager  {
             writeToLogFileError(String.valueOf(e));
         }
     }
-    public static void writeToAlarmsFile(String message) {
+    public  void writeToAlarmsFile(String message) {
         String debugLogFile = appFolderPath + "logs/all_alarms.log";
-        String debugHead = currentDateTime() + " Data: ";
+        String debugHead = currentDateTime() + " Alarm Created: ";
         try {
             createFileDir("logs");
             writeToFile(debugLogFile, debugHead, message);
@@ -73,62 +70,75 @@ public    class FileDirManager  {
             writeToLogFileError(String.valueOf(e));
         }
     }
-    public static void writeToLogFileError(String message) {
+    public  void writeToLogFileError(String message) {
         String errorLogFile = appFolderPath+ "logs/ginger_alarm_error.log";
         String errorHead = currentDateTime() + " Error: ";
         try {
+            createFileDir("logs");
             writeToFile(errorLogFile, errorHead, message);
         } catch (IOException e) {
-            System.out.println(e);
+            writeToLogFileError(e.toString());
         }
     }
 
-    public static class BackgroundTask {
-        DBManager DbManager = new DBManager();
+    public void writeToAlarmsFileCue(String message) throws IOException {
+        String alarmCueLogFile = appFolderPath + ".alarms/alarms_static.log";
 
-        @NotNull
-        protected ScheduledService<Void> getBackgroundService(Stage secondaryStage) {
+        try {
+            createFileDir(".alarms");
+            if (!checkIfLineInFile(alarmCueLogFile,message)){
+                writeToFile(alarmCueLogFile, "", message);
+            }
 
-            ScheduledService<Void> backgroundService = new ScheduledService<>() {
-                @Override
-                protected Task<Void> createTask() {
-                    return new Task<>() {
-                        @Override
-                        protected Void call() throws Exception {
-                            // Perform your background task logic here
+        } catch (IOException e) {
+            writeToLogFileError(String.valueOf(e));
+        }
+    }
+    public boolean checkForMatchingAlarmTime(String message) throws Exception {
+        String alarmCueLogFile = appFolderPath + ".alarms/alarms_static.log";
 
+        if (checkIfLineInFileMatchesCurrentDateTime(alarmCueLogFile)){
+            System.out.println(message);
+            writeToLogFileDebug(message);
+            return true;
 
-                            /*
-
-                            if (!secondaryStage.isShowing()) {
-                                Platform.runLater(()->{
-                                    try {
-                                        secondaryStage.setScene(new AlarmPopUp(secondaryStage).AlarmPopUpScene());
-                                    } catch (Exception e) {
-                                        throw new RuntimeException(e);
-                                    }
-                                });
-
-                                Platform.runLater(secondaryStage::show);
-                            }
-                             */
-                            List<String> days = new ArrayList<>();
-
-    //                        DbManager.AlarmUpdate("get", "west", "12:23",  true, days);
-    //                        FileDirManager.createFileDir("logs");
-                            System.out.println("Background task running... at Time:" + currentDateTime());
-    //                        Process process = Runtime.getRuntime().exec("curl -o https://github.com/codewithwest/ProjectGinger/blob/main/Power_down.py");
-    //                        new DayToDate().GetNewAlarmDay("Friday", "19", "33");
-
-                            return null;
-                        }
-                    };
-                }
-            };
-            //    backgroundService.notify();
-            backgroundService.setPeriod(Duration.seconds(5)); // Execute every 1 min
-            return backgroundService;
         }
 
+        return false;
+    }
+
+    public boolean checkIfLineInFile(String filePath, String stringLine) {
+        try {
+            List<String> allLines = Files.readAllLines(Paths.get(filePath));
+            for (String line : allLines) {
+                if (line.equals(stringLine)) {
+                    return true;
+                }
+            }
+        } catch (IOException e) {
+            writeToLogFileError(e.toString());
+        }
+        return false;
+    }
+
+    public boolean checkIfLineInFileMatchesCurrentDateTime(String filePath) {
+        String todaysDate = String.valueOf(Calendar.getInstance().getTime());
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm");
+        String currTime = dtf.format(LocalDateTime.now());
+        todaysDate = dateResolver.ActualAlarmDate(todaysDate);
+        try {
+            List<String> allLines = Files.readAllLines(Paths.get(filePath));
+            for (String line : allLines) {
+                System.out.println("CurrentLine: " + line);
+                System.out.println("Contains Time: " + currTime);
+                System.out.println("Contains Date: " + todaysDate);
+                if (line.contains(currTime) && line.contains(todaysDate)) {
+                    return true;
+                }
+            }
+        } catch (IOException e) {
+            writeToLogFileError(e.toString());
+        }
+        return false;
     }
 }

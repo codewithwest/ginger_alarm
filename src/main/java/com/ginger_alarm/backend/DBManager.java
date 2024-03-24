@@ -1,44 +1,60 @@
 package com.ginger_alarm.backend;
 
-import com.mongodb.client.MongoClient;
-import com.mongodb.client.MongoClients;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.*;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.result.InsertOneResult;
 import org.bson.Document;
 import org.jetbrains.annotations.NotNull;
 
-import java.text.Format;
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
+import java.io.IOException;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
-
 
 public class DBManager {
     String uri = "mongodb://localhost:27017";
+//    DayToDate dateResolver = new DayToDate();
+    DateResolver dateResolver = new DateResolver();
 
-    public MongoClient DBConnection(){
-        try (MongoClient getConn = MongoClients.create(this.uri)){
+
+    public MongoClient DBConnection() {
+        try (MongoClient getConn = MongoClients.create(this.uri)) {
             return getConn;
         }
     }
 
-    public MongoCollection<Document> GetCollection(){
-        MongoClient connection = DBConnection();
-            if (connection != null) {
-                MongoDatabase database = connection.getDatabase("ginger_test");
-                //                Document news= DBCollection.find(Filters.eq("message", "message")).first();
-                return database.getCollection("alarm");
+    public void GetCollection() {
+        System.out.println("No alarms found!!!One");
+
+        // MongoClient connection = DBConnection();
+        // if (connection != null) {
+        MongoClient connection = MongoClients.create(uri);
+        MongoDatabase database = connection.getDatabase("ginger_test");
+        MongoCollection<Document> collection = database.getCollection("alarm");
+        Document document = collection.find(Filters.eq("message", "test")).first();
+        assert document != null;
+        try (MongoCursor<Document> cursor = collection.find().iterator()) {
+            while (cursor.hasNext()) {
+                // Create Alarms cue file
+                FileDirManager alarmsFileWriter = new FileDirManager();
+                Document alarmData = cursor.next();
+                String todaysDate = String.valueOf(Calendar.getInstance().getTime());
+                todaysDate = dateResolver.ActualAlarmDate(todaysDate);
+
+                if (alarmData.get("days").toString().contains(todaysDate)) {
+
+                    alarmsFileWriter.writeToAlarmsFileCue("time: " + alarmData.get("time") + " date: " +
+                            todaysDate);
+                }
             }
-            return null;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
-    public void AlarmUpdate(@NotNull String Option, String AlarmMessage, String AlarmTime, Boolean Repeated, List<String> AlarmList) {
+    public void AlarmUpdate(@NotNull String Option, String AlarmMessage,
+            String AlarmTime, Boolean Repeated,
+            List<String> AlarmList) {
 
         MongoClient connection = MongoClients.create(uri);
         MongoDatabase database = connection.getDatabase("ginger_test");
@@ -61,71 +77,23 @@ public class DBManager {
                         .append("repeat", Repeated)
                         .append("days", AlarmList));
                 System.out.println("Data Updated");
-                TimeManager CurrTimer = new TimeManager();
-                CurrTimer.CurrentTime();
+
+                TimeManager.CurrentTime();
                 System.out.println("Success! Inserted document id: " + updateEntry.getInsertedId());
             }
-        }else {
-            if (document != null){
+        } else {
+            if (document != null) {
                 System.out.println(document.get("time"));
-                CurrentTime();
-                if (document.get("time") == "12:50"){
+                TimeManager.CurrentTime();
+                if (document.get("time") == "12:50") {
                     System.out.println(document.get("message"));
                 }
             }
 
-
         }
 
     }
 
-    public String CurrentTime() {
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-        LocalDateTime now = LocalDateTime.now();
-        String dat = dtf.format(now);
-        System.out.println(Arrays.asList(dat.split(" ")));
 
-        Calendar cal = Calendar.getInstance();
-        //creating a constructor of the SimpleDateFormat class
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-        //getting current date
-        System.out.println("Today's date: " + sdf.format(cal.getTime()));
-        //creating a constructor of the Format class
-        //displaying full-day name
-        Format f = new SimpleDateFormat("EEEE");
-        String str = f.format(new Date());
-        //prints day name
-        System.out.println("Day Name: " + str);
 
-        // creating a new object of the class Date
-        java.util.Date date = new java.util.Date();
-        System.out.println(Arrays.asList(date.toString().split(" ")));
-        return dtf.toString();
     }
-
-    public static class TimeManager {
-        public  void CurrentTime() {
-            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-            LocalDateTime now = LocalDateTime.now();
-            String dat = dtf.format(now);
-            System.out.println(Arrays.asList(dat.split(" ")));
-
-            Calendar cal = Calendar.getInstance();
-            //creating a constructor of the SimpleDateFormat class
-            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-            //getting current date
-            System.out.println("Today's date: "+sdf.format(cal.getTime()));
-            //creating a constructor of the Format class
-            //displaying full-day name
-            Format f = new SimpleDateFormat("EEEE");
-            String str = f.format(new Date());
-            //prints day name
-            System.out.println("Day Name: "+str);
-
-            // creating a new object of the class Date
-            Date date = new Date();
-            System.out.println(Arrays.asList(date.toString().split(" ")));
-
-        }
-    }
-}

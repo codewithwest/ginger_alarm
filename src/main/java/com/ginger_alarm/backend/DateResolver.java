@@ -53,7 +53,6 @@ public class DateResolver implements DateResolverInterface {
         return day;
     }
 
-
     @Override
     public String ResolveYear(String date) {
         Pattern pattern = Pattern.compile(" \\d{4}", Pattern.CASE_INSENSITIVE);
@@ -68,6 +67,12 @@ public class DateResolver implements DateResolverInterface {
     @Override
     public String ActualAlarmDate(String date) {
         return this.ResolveDate(date)+ "-"+this.ResolveMonth(date)+"-"+this.ResolveYear(date);
+    }
+
+
+    public boolean getDatesThatMatchToday() {
+
+        return true;
     }
 
 }

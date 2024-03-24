@@ -13,7 +13,7 @@ import java.util.Objects;
 
 public class BackgroundHandler {
 
-    boolean stateWindow = true;
+    boolean stateWindow = false;
     public void handleBackgroundScene(Stage stage) {
         Platform.setImplicitExit(false);
 

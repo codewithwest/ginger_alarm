@@ -18,7 +18,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-class AlarmPopUp {
+public class AlarmPopUp {
 
     Button dismissButton, snoozeButton;
     Stage currentStage;
@@ -26,7 +26,7 @@ class AlarmPopUp {
     Media sound;
     MediaPlayer mediaPlayer;
 
-    AlarmPopUp(@NotNull Stage currentStage) throws Exception {
+    public AlarmPopUp(@NotNull Stage currentStage) throws Exception {
         currentStage.setX(10000);
         currentStage.setAlwaysOnTop(true);
         currentStage.setY(0);
@@ -97,7 +97,6 @@ class AlarmPopUp {
         //  Getting the stylesheet file
         scene.getStylesheets().add("file:/samba/public/documents/github/ginger_alarm/src/main/resources/style/alarmPopUp.css");
         this.mediaPlayer.play();
-
         return scene;
     }
 }
