@@ -2,6 +2,9 @@ package com.ginger_alarm.backend.helpers;
 
 import java.util.List;
 
+/**
+ * Day to date Blue print
+ */
 public interface DayToDateInterface {
 
 
