@@ -23,7 +23,8 @@ import java.util.List;
 
 public class Layouts {
     VBox alarmsLayout, newAlarmLayout, settingsLayout;
-    public  VBox alarmsLayout(){
+
+    public VBox alarmsLayout() {
         alarmsLayout = new VBox();
         alarmsLayout.setPadding(new Insets(.5, .5, .5, .2));
 
@@ -89,7 +90,7 @@ public class Layouts {
             if (newValue.matches("\\d*")) return;
             alarmHoursInput.setText(newValue.replaceAll("[^\\d]", oldValue.replaceAll("[^0-9]{2}", "")));
         });
-        GridPane.setConstraints(alarmHoursInput ,0, 1);
+        GridPane.setConstraints(alarmHoursInput, 0, 1);
         Label alarmHoursMinutesInputDivider = new Label(" : ");
         GridPane.setConstraints(alarmHoursMinutesInputDivider, 1, 1);
         TextField alarmMinutesInput = new TextField("30");
@@ -136,7 +137,7 @@ public class Layouts {
         alarmRepeatCheckBoxSun.getStyleClass().add("labelText");
         alarmRepeatDays.getChildren().addAll(alarmRepeatCheckBoxMon,
                 alarmRepeatCheckBoxTue, alarmRepeatCheckBoxWed,
-                alarmRepeatCheckBoxThur,alarmRepeatCheckBoxFri,
+                alarmRepeatCheckBoxThur, alarmRepeatCheckBoxFri,
                 alarmRepeatCheckBoxSat, alarmRepeatCheckBoxSun);
         alarmRepeatDays.setAlignment(Pos.TOP_LEFT);
         alarmRepeatDays.setPrefWidth(300);
@@ -151,49 +152,49 @@ public class Layouts {
         alarmRepeat.setSpacing(30);
         addNewAlarmButton.getStyleClass().add("setAlarmButton");
 
-        alarmRepeat.getChildren().addAll(alarmRepeatCheckBox, new Group(alarmRepeatDays),addNewAlarmButton);
+        alarmRepeat.getChildren().addAll(alarmRepeatCheckBox, new Group(alarmRepeatDays), addNewAlarmButton);
 
         newAlarmSetGridContainer.getChildren().addAll(
                 alarmLabel,
                 alarmHours, alarmHoursMinutesDivider, alarmMinutes,
                 alarmHoursInput, alarmHoursMinutesInputDivider, alarmMinutesInput
-                );
+        );
 
-        newAlarmLayout.getChildren().addAll(alarmLabel, alarmMessage,newAlarmSetGridContainer,alarmRepeat);
+        newAlarmLayout.getChildren().addAll(alarmLabel, alarmMessage, newAlarmSetGridContainer, alarmRepeat);
         newAlarmLayout.setPadding(new Insets(20));
         newAlarmLayout.setSpacing(10);
         List<String> days = new ArrayList<>();
 
         // Retrieve Alarm Data
-        addNewAlarmButton.setOnAction(e->{
+        addNewAlarmButton.setOnAction(e -> {
             String hours = alarmHoursInput.getText();
             String minutes = alarmMinutesInput.getText();
             try {
                 if (Integer.parseInt(hours) > 23 || Integer.parseInt(hours) < 0) return;
                 if (Integer.parseInt(minutes) > 59 || Integer.parseInt(minutes) < 0) return;
                 if (alarmMessageInput.getText().length() < 3) return;
-            } catch (Exception err){
+            } catch (Exception err) {
                 e.consume();
                 return;
             }
 
-            if(alarmRepeatCheckBoxMon.isSelected())days.add("Monday");
-            if(alarmRepeatCheckBoxTue.isSelected())days.add("Tuesday");
-            if(alarmRepeatCheckBoxWed.isSelected())days.add("Wednesday");
-            if(alarmRepeatCheckBoxThur.isSelected())days.add("Thursday");
-            if(alarmRepeatCheckBoxFri.isSelected())days.add("Friday");
-            if(alarmRepeatCheckBoxSat.isSelected())days.add("Saturday");
-            if (alarmRepeatCheckBoxSun.isSelected())days.add("Sunday");
+            if (alarmRepeatCheckBoxMon.isSelected()) days.add("Monday");
+            if (alarmRepeatCheckBoxTue.isSelected()) days.add("Tuesday");
+            if (alarmRepeatCheckBoxWed.isSelected()) days.add("Wednesday");
+            if (alarmRepeatCheckBoxThur.isSelected()) days.add("Thursday");
+            if (alarmRepeatCheckBoxFri.isSelected()) days.add("Friday");
+            if (alarmRepeatCheckBoxSat.isSelected()) days.add("Saturday");
+            if (alarmRepeatCheckBoxSun.isSelected()) days.add("Sunday");
 
-            String alarmMes = "message: " + alarmMessageInput.getText()+",";
-            String chosenTime = "time: "+ hours + ":" + minutes+",";
-            String repeatedTime = "repeated: " + alarmRepeatCheckBox.isSelected()+",";
+            String alarmMes = "message: " + alarmMessageInput.getText() + ",";
+            String chosenTime = "time: " + hours + ":" + minutes + ",";
+            String repeatedTime = "repeated: " + alarmRepeatCheckBox.isSelected() + ",";
             String numOfDays = "days: " + new ArrayList<>(new HashSet<>(days));
             DBManager DbManager = new DBManager();
             List<String> uniqueDays = new ArrayList<>(new HashSet<>(days));
             List<String> ResolvedDays;
             ResolvedDays = new DayToDate().GetAlarmDates(uniqueDays, hours, minutes);
-            DbManager.AlarmUpdate("new",alarmMessageInput.getText(),
+            DbManager.AlarmUpdate("new", alarmMessageInput.getText(),
                     hours + ":" + minutes,
                     alarmRepeatCheckBox.isSelected(),
                     ResolvedDays);
@@ -221,27 +222,15 @@ public class Layouts {
         return newAlarmLayout;
     }
 
-    public  VBox settingsLayout(){
-        alarmsLayout = new VBox();
-        alarmsLayout.setPadding(new Insets(.5, .5, .5, .2));
+    public VBox settingsLayout() {
+        settingsLayout = new VBox();
+        Label timeLabel = new Label("This is your settings");
+        settingsLayout.getStyleClass().add("settings");
 
-        Label timeLabel = new Label();
-        timeLabel.setId("timeLabel"); // For styling purposes
-        AnimationTimer timer = new AnimationTimer() {
-            @Override
-            public void handle(long now) {
-                LocalDateTime currentTime = LocalDateTime.now();
-                String formattedTime = currentTime.format(DateTimeFormatter.ofPattern("HH:mm:ss"));
-                timeLabel.setText(formattedTime);
-            }
-        };
-        timer.start();
-        alarmsLayout.getStyleClass().add("timeCounter");
+        settingsLayout.getChildren().addAll(timeLabel);
+        settingsLayout.setAlignment(Pos.CENTER);
 
-        alarmsLayout.getChildren().addAll(timeLabel);
-        alarmsLayout.setAlignment(Pos.CENTER);
-
-        return alarmsLayout;
+        return settingsLayout;
     }
 
 }

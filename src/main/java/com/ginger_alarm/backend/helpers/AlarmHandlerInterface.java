@@ -8,5 +8,4 @@ public interface AlarmHandlerInterface {
     boolean AlarmIsRepeated();
     boolean DeleteExecutedAlarm();
     String ResolveFutureAlarmDateAlarmRepeated();
-
 }

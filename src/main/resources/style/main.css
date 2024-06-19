@@ -1,8 +1,9 @@
 .main-hbox {
-    mainColor:#0F0F0F;
+    mainColor: #171717;
     secondaryColor:#00CCFF;
     borderColor:#00999b;
     secondaryBorderColor:#903b12;
+
     -fx-text-fill:borderColor;
     -fx-margin: 15;
     -fx-fontSize:20pt;
@@ -12,20 +13,37 @@
     -fx-min-height: 590px;
     -fx-opacity:.92;
     -fx-min-width: 600px;
-    //-fx-background-radius:100%;
     -fx-padding: 75 ,15, 75, 15; // top, right, bottom, left
     -fx-background-insets: 0,0 0 5 0, 0 0 6 0, 0 0 7 0;
     -fx-background-radius: 100%;
     -fx-background-color:mainColor;
     -fx-effect: dropshadow(gaussian , mainColor , 4,0,0,1);
     -fx-font-weight: bold;
-    -fx-font-size: 1.1em;
+    -fx-font-size: 1em;
     -fx-alignment:center;
 }
 
-.mainButton {
-    -fx-margin:auto;
+.main-btns-cont {
+    -fx-spacing: 10;
+    -fx-alignment: center-left;
+    -fx-min-width: 20;
     -fx-padding: 5;
+}
+.main-content-cont {
+    -fx-max-width: 550;
+    -fx-fit-to-height: false;
+    -fx-border-radius: 20;
+    -fx-padding: 5;
+    -fx-border-color: #00CCFF;
+    -fx-alignment: center-right;
+}
+
+.mainButton {
+
+    -fx-margin:auto;
+    -fx-text-alignment: center;
+    -fx-max-width: 150;
+    -fx-padding: 20 10;
     -fx-background-insets: 0,0 0 5 0, 0 0 6 0, 0 0 7 0;
     -fx-border-radius: 15%;
     -fx-border-color:secondaryBorderColor;
@@ -34,11 +52,11 @@
     -fx-background-color:
         linear-gradient(from 0% 93% to 0% 100%, mainColor 0%, #903baa 100%);
     -fx-border-width: 0.35; // top, right, bottom, left
-    -fx-pref-height:85px;
-    -fx-pref-width:120px;
-    -fx-effect: dropshadow( gaussian , rgba(0,0,0,0.75) , 4,0,0,1 );
+    /*-fx-pref-height:85px;*/
+    /*-fx-pref-width:120px;*/
+    -fx-effect: dropshadow(gaussian , rgba(0,0,0,0.75) , 4,0,0,1 );
     -fx-font-weight: bold;
-    -fx-font-size: 1.1em;
+    -fx-font-size: 1.05em;
 
 }
 .mainButton:hover {
@@ -47,7 +65,7 @@
             linear-gradient(from 0% 93% to 0% 100%, mainColor 0%, secondaryBorderColor 100%);
 }
 .mainButton:pressed {
-    -fx-padding: 10 15 13 15;
+    -fx-padding: 18 8;
     -fx-background-insets: 2 0 0 0,2 0 3 0, 2 0 4 0, 2 0 5 0;
 }
 .mainButton Text {
@@ -57,7 +75,7 @@
 #exitButton{
     -fx-background-color:rgba(233, 0 , 20, .2);
 }
-
+/* Start of time Inputs */
 .timeInputs {
     -fx-background-color: -fx-text-box-border, -fx-background ;
     -fx-background-insets: 0 0 1 0;
@@ -68,11 +86,10 @@
     -fx-border-width: 1.5; // top, right, bottom, left
     -fx-font-size:22pt;
     -fx-border-radius:15%;
-    -fx-background-color: transparent;
+    /*-fx-background-color: transparent;*/
 }
 .timeInputs:focused {
     -fx-background-color: -fx-focus-color, -fx-background;
-    -fx-background-color: transparent;
 }
 
 .messageInputs {
@@ -81,7 +98,6 @@
     -fx-background-radius: 20;
     -fx-pref-height: 55;
     -fx-pref-width:220;
-    -fx-background-color: transparent;
     -fx-border-radius:3.5%;
     -fx-border-width: 1.5; // top, right, bottom, left
     -fx-border-color: secondaryBorderColor;
@@ -97,7 +113,6 @@
     -fx-border-width: 1.5; // top, right, bottom, left
     -fx-font-size:12pt;
     -fx-border-radius:15%;
-    -fx-border-color: secondaryBorderColor;
 }
 .setAlarmButton:hover {
     -fx-text-color:red;
@@ -113,7 +128,6 @@
     -fx-background-insets: 2 0 0 0,2 0 3 0, 2 0 4 0, 2 0 5 0;
     -fx-font-size:45pt;
     -fx-margin:auto;
-    -fx-padding: 10;
 }
 
 .labelText{
